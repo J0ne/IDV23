@@ -12,10 +12,14 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "lit": "^2.6.1"
+    "lit": "^2.6.1",
+    "highcharts": "10.3.3",
+    "highcharts-exporting": "0.1.7",
+    "highcharts-export-data": "0.1.7"
   },
   "devDependencies": {
     "vite": "^4.2.0"
