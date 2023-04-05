@@ -8,6 +8,15 @@ export class BarChart extends LitElement {
     };
   }
 
+  async connectedCallback() {
+    super.connectedCallback();
+    const response = await fetch(
+      "http://localhost:5173/.netlify/functions/read-all"
+    );
+    const observations = await response.json();
+    console.log(observations);
+  }
+
   render() {
     return html`<div id="barChart"></div>`;
   }
@@ -20,7 +29,7 @@ export class BarChart extends LitElement {
     const container = this.renderRoot.getElementById("barChart");
     Highcharts.chart(container, {
       title: {
-        text: "Observations",
+        text: "observation",
         align: "left",
       },
       label: false,

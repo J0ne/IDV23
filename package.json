@@ -16,10 +16,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "lit": "^2.6.1",
+    "faunadb": "^4.8.0",
     "highcharts": "10.3.3",
+    "highcharts-export-data": "0.1.7",
     "highcharts-exporting": "0.1.7",
-    "highcharts-export-data": "0.1.7"
+    "lit": "^2.6.1"
   },
   "devDependencies": {
     "vite": "^4.2.0"
