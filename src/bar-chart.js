@@ -10,9 +10,7 @@ export class BarChart extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
-    const response = await fetch(
-      "http://localhost:5173/.netlify/functions/read-all"
-    );
+    const response = await fetch("../.netlify/functions/read-all");
     const observations = await response.json();
     console.log(observations);
   }
