@@ -1,0 +1,9 @@
+GET http://localhost:9999/.netlify/functions/getobservations
+
+
+###
+GET http://localhost:9999/.netlify/functions/hello-world
+
+
+###
+GET http://localhost:9999/.netlify/functions/read-all
