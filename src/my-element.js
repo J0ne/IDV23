@@ -34,11 +34,7 @@ export class MyElement extends LitElement {
   }
 
   render() {
-    return html`
-      <div>
-        <bar-chart></bar-chart>
-      </div>
-    `;
+    return html`   <bar-chart></bar-chart> `;
   }
 
   _onClick() {

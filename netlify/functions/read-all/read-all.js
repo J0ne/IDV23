@@ -13,7 +13,7 @@ export const handler = async (event) => {
 
   try {
     const response = await client.query(
-      query.Paginate(query.Match(query.Index("observer_index")))
+      query.Paginate(query.Match(query.Index("smart_ticket_index")))
     );
     const itemRefs = response.data;
     // create new query out of item refs. http://bit.ly/2LG3MLg
