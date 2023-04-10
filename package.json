@@ -17,6 +17,7 @@
     "netlify": "netlify dev"
   },
   "dependencies": {
+    "@material/web": "^1.0.0-pre.5",
     "faunadb": "^4.8.0",
     "highcharts": "10.3.3",
     "highcharts-export-data": "0.1.7",

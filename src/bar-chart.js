@@ -18,7 +18,9 @@ export class BarChart extends LitElement {
     super.connectedCallback();
     const response = await fetch("../.netlify/functions/read-all");
     const data = await response.json();
-    this.observationsRaw = data.map((d) => d.data);
+
+    this.observationsRaw = data;
+
     this.count = this.observationsRaw.length;
     console.log(this.observationsRaw);
   }
@@ -47,9 +49,22 @@ export class BarChart extends LitElement {
   queryData() {
     // params etc
     const xAxis = this.observationsRaw.map((item, index) => [
-      new Date(item.created).getDay(),
+      new Date(item.startDate).getDay(),
       index,
     ]);
+
+    /*
+    [{
+        name: 'BPL',
+        data: [3, 5, 1, 13]
+    }, {
+        name: 'FA Cup',
+        data: [14, 8, 8, 12]
+    }, {
+        name: 'CL',
+        data: [0, 2, 6, 3]
+    }]
+    */
     // const months = [...new Set(xAxis)];
     // const data = [];
     // xAxis.forEach((m, i) => {
@@ -62,6 +77,10 @@ export class BarChart extends LitElement {
     console.log("render");
     const container = this.renderRoot.getElementById("barChart");
     this.chart = Highcharts.chart(container, {
+      chart: {
+        type: "column",
+        //     styledMode: true,
+      },
       title: {
         text: "observation",
         align: "left",

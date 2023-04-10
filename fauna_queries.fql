@@ -1,0 +1,81 @@
+Map(
+  Paginate(Distinct(Match(Index("states")))),
+  Lambda("x", {
+    state: Var("x"),
+    count: Count(Match(Index("observations_by_state1"), Var("x"))),
+  })
+);
+
+
+
+// manipulate all
+// Map(
+//   Paginate(Match(Index("all_observations"))),
+//   Lambda(
+//     "ref",
+//     Update(Var("ref"), {
+//     //   data: {
+//     //     # end_time: ReplaceStr(
+//     //     #   Concat([ Select(["data", "end_time"], Get(Var("ref"))), 'Z'], ''),
+//     //     #   " ",
+//     //     #   "T"
+//     //     # ),
+//         startDate: Date(Select(["data", "start_time"], Get(Var("ref")))),
+
+//         CreatedModifiedDiff: TimeDiff( Select(["data", "created"], Get(Var("ref"))),
+//         Select(["data", "modified"], Get(Var("ref"))), "days" )
+//       },
+
+//     })
+//   )
+// );
+
+// Map(
+//   Paginate(Match(Index("all_observations"))),
+//   Lambda(
+//     "ref",
+//     Update(Var("ref"), {
+//       data: {
+//         end_time: Date(
+//           Select(["data", "end_time"], Get(Var("ref")))
+//         ),
+//       },
+//     })
+//   )
+// );
+
+
+
+Query(
+  Lambda(
+    ["fromDate", "toDate"],
+    Map(
+      Select(
+        ["data"],
+        Paginate(
+          Range(
+            Match(Index("observations_by_created_date")),
+            Date(Var("fromDate")),
+            Date(Var("toDate"))
+          )
+        )
+      ),
+      Lambda(["date", "ref"], Get(Var("ref")))
+    )
+  )
+);
+
+
+Call("convertToObservation")
+
+
+    Map(
+        Paginate(Match(Index("all_observations"))),
+        Lambda("x", {
+          id: Select(["data", "id"], Get(Var("x"))),
+          type: Select(["data", "type_id"], Get(Var("x"))),
+          startTime: ToString(Select(["data", "start_time"], Get(Var("x")))),
+          startDate: ToString(Select(["data", "startDate"], Get(Var("x")))),
+          state: Select(["data", "state"], Get(Var("x"))),
+        })
+      )
