@@ -28,13 +28,15 @@ export const handler = async (event) => {
       //query.Paginate(query.Match(query.Index("all_observations")))
       // query.Paginate(query.Match(query.Index("all_observations")))
       Map(
-        Paginate(Match(Index("all_observations"))),
+        Paginate(Match(Index("all_observations2")), { size: 1000 }),
         Lambda("x", {
           id: Select(["data", "id"], Get(Var("x"))),
           type: Select(["data", "type_id"], Get(Var("x"))),
           startTime: ToString(Select(["data", "start_time"], Get(Var("x")))),
           startDate: ToString(Select(["data", "startDate"], Get(Var("x")))),
           state: Select(["data", "state"], Get(Var("x"))),
+          modified: Select(["data", "modified"], Get(Var("x"))),
+          created: Select(["data", "created"], Get(Var("x"))),
         })
       )
     );

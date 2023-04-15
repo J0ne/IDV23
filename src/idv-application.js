@@ -34,7 +34,10 @@ export class MyElement extends LitElement {
   }
 
   render() {
-    return html`   <bar-chart></bar-chart> `;
+    return html`
+      <header></header>
+      <bar-chart></bar-chart>
+    `;
   }
 
   _onClick() {
@@ -116,4 +119,4 @@ export class MyElement extends LitElement {
   }
 }
 
-window.customElements.define("my-element", MyElement);
+window.customElements.define("idv-application", MyElement);

@@ -9,26 +9,26 @@ Map(
 
 
 // manipulate all
-// Map(
-//   Paginate(Match(Index("all_observations"))),
-//   Lambda(
-//     "ref",
-//     Update(Var("ref"), {
-//     //   data: {
-//     //     # end_time: ReplaceStr(
-//     //     #   Concat([ Select(["data", "end_time"], Get(Var("ref"))), 'Z'], ''),
-//     //     #   " ",
-//     //     #   "T"
-//     //     # ),
-//         startDate: Date(Select(["data", "start_time"], Get(Var("ref")))),
+Map(
+  Paginate(Match(Index("all_observations"))),
+  Lambda(
+    "ref",
+    Update(Var("ref"), {
+      data: {
+        end_time: ReplaceStr(
+          Concat([ Select(["data", "end_time"], Get(Var("ref"))), 'Z'], ''),
+          " ",
+          "T"
+        ),
+        startDate: Date(Select(["data", "start_time"], Get(Var("ref")))),
 
-//         CreatedModifiedDiff: TimeDiff( Select(["data", "created"], Get(Var("ref"))),
-//         Select(["data", "modified"], Get(Var("ref"))), "days" )
-//       },
+        CreatedModifiedDiff: TimeDiff( Select(["data", "created"], Get(Var("ref"))),
+        Select(["data", "modified"], Get(Var("ref"))), "days" )
+      },
 
-//     })
-//   )
-// );
+    })
+  )
+);
 
 // Map(
 //   Paginate(Match(Index("all_observations"))),
@@ -69,13 +69,266 @@ Query(
 Call("convertToObservation")
 
 
-    Map(
-        Paginate(Match(Index("all_observations"))),
-        Lambda("x", {
-          id: Select(["data", "id"], Get(Var("x"))),
-          type: Select(["data", "type_id"], Get(Var("x"))),
-          startTime: ToString(Select(["data", "start_time"], Get(Var("x")))),
-          startDate: ToString(Select(["data", "startDate"], Get(Var("x")))),
-          state: Select(["data", "state"], Get(Var("x"))),
-        })
-      )
+Map(
+  Paginate(Match(Index("all_observations")), { size: 10000 }),
+  Lambda(
+    "ref",
+    Let(
+      {
+        data: Select(["data"], Get(Var("ref"))),
+        end_time: Select(
+          ["data", "end_time"],
+          Get(Var("ref"))
+        ),
+        start_time: Select(
+          ["data", "start_time"],
+          Get(Var("ref"))
+        ),
+        created: Select(
+          ["data", "created"],
+          Get(Var("ref"))
+        ),
+        modified: Select(
+          ["data", "modified"],
+          Get(Var("ref"))
+        )
+      },
+      Update(Var("ref"), {
+        data: {
+          end_time: If(
+            IsString(Var("end_time")),
+            ReplaceStr(
+              Concat([Var("end_time"), "Z"], ""),
+              " ",
+              "T"
+            ),
+            Var("end_time")
+          ),
+          start_time: If(
+            IsString(Var("start_time")),
+            ReplaceStr(
+              Concat([Var("start_time"), "Z"], ""),
+              " ",
+              "T"
+            ),
+            Var("start_time")
+          ),
+          created: If(
+            IsString(Var("created")),
+            ReplaceStr(
+              Concat([Var("created"), "Z"], ""),
+              " ",
+              "T"
+            ),
+            Var("created")
+          ),
+          modified: If(
+            IsString(Var("modified")),
+            ReplaceStr(
+              Concat([Var("modified"), "Z"], ""),
+              " ",
+              "T"
+            ),
+            Var("modified")
+          )
+        }
+      })
+    )
+  )
+)
+
+
+Map(
+  Paginate(Match(Index("all_observations")), { size: 10000 }),
+  Lambda(
+    "ref",
+    Let(
+      {
+        data: Select(["data"], Get(Var("ref")))
+      },
+      Update(Var("ref"), {
+        data: {
+          end_time: If(
+            IsString(Select(["end_time"], Var("data"))),
+            Time(ReplaceStr(
+              Concat([Select(["end_time"], Var("data")), 'Z'], ''),
+              " ",
+              "T"
+            )),
+            Select(["end_time"], Var("data"))
+          ),
+          start_time: If(
+            IsString(Select(["start_time"], Var("data"))),
+            Time(ReplaceStr(
+              Concat([Select(["start_time"], Var("data")), 'Z'], ''),
+              " ",
+              "T"
+            )),
+            Select(["start_time"], Var("data"))
+          ),
+          created: If(
+            IsString(Select(["created"], Var("data"))),
+            Time(ReplaceStr(
+              Concat([Select(["created"], Var("data")), 'Z'], ''),
+              " ",
+              "T"
+            )),
+            Select(["created"], Var("data"))
+          ),
+          modified: If(
+            IsString(Select(["modified"], Var("data"))),
+            Time(ReplaceStr(
+              Concat([Select(["modified"], Var("data")), 'Z'], ''),
+              " ",
+              "T"
+            )),
+            Select(["modified"], Var("data"))
+          )
+        }
+      })
+    )
+  )
+)
+
+
+Map(
+  Paginate(Match(Index("all_observations")), { size: 10000 }),
+  Lambda(
+    "ref",
+    Let(
+      {
+        data: Select(["data"], Get(Var("ref"))),
+        start_time: If(
+          IsString(Select(["start_time"], Var("data"))),
+          Time(Select(["start_time"], Var("data"))),
+          Select(["start_time"], Var("data"))
+        ),
+        end_time: If(
+          IsString(Select(["end_time"], Var("data"))),
+          Time(ReplaceStr(Select(["end_time"], Var("data")), "ZZ", "Z")),
+          Select(["end_time"], Var("data"))
+        ),
+        created: If(
+          IsString(Select(["created"], Var("data"))),
+          Time(Select(["created"], Var("data"))),
+          Select(["created"], Var("data"))
+        ),
+        modified: If(
+          IsString(Select(["modified"], Var("data"))),
+          Time(Select(["modified"], Var("data"))),
+          Select(["modified"], Var("data"))
+        ),
+        diff: TimeDiff(
+          Select(["created"], Var("data")),
+          Select(["modified"], Var("data")),
+          "days"
+        )
+      },
+      Update(Var("ref"), {
+        data: {
+          start_time: Var("start_time"),
+          end_time: Var("end_time"),
+          created: Var("created"),
+          modified: Var("modified"),
+          CreatedModifiedDiff: Var("diff")
+        }
+      })
+    )
+  )
+)
+
+
+
+Map(
+  Paginate(Match(Index("all_observations2")), { size: 1500 }),
+  Lambda(
+    "ref",
+    Let(
+      {
+        data: Select(["data"], Get(Var("ref"))),
+        updated_end_time: If(
+          ContainsStr(Select(["end_time"], Var("data")), "Z"),
+          Select(["end_time"], Var("data")),
+          Concat([Select(["end_time"], Var("data")), "Z"])
+        ),
+        updated_start_time: If(
+          ContainsStr(Select(["start_time"], Var("data")), "Z"),
+          Select(["start_time"], Var("data")),
+          Concat([Select(["start_time"], Var("data")), "Z"])
+        ),
+        updated_created: If(
+          ContainsStr(Select(["created"], Var("data")), "Z"),
+          Select(["created"], Var("data")),
+          Concat([Select(["created"], Var("data")), "Z"])
+        ),
+        updated_modified: If(
+          ContainsStr(Select(["modified"], Var("data")), "Z"),
+          Select(["modified"], Var("data")),
+          Concat([Select(["modified"], Var("data")), "Z"])
+        )
+      },
+      Update(Var("ref"), {
+        data: {
+          end_time: Var("updated_end_time"),
+          start_time: Var("updated_start_time"),
+          created: Var("updated_created"),
+          modified: Var("updated_modified")
+        }
+      })
+    )
+  )
+)
+
+Map(
+  Paginate(Match(Index("all_observations2")), { size: 10000 }),
+  Lambda(
+    "ref",
+    Let(
+      {
+        start_time: Select(["data", "start_time"], Get(Var("ref"))),
+        start_date: ToDate(Var("start_time"))
+      },
+      Update(Var("ref"), {
+        data: {
+          startDate: Var("start_date")
+        }
+      })
+    )
+  )
+)
+
+Map(
+  Paginate(Match(Index("all_observations2")), { size: 1500 }),
+  Lambda(
+    "ref",
+    Let(
+      {
+        modified: Select(["data", "modified"], Get(Var("ref"))),
+        modified_date: ToTime(Var("modified"))
+      },
+      Update(Var("ref"), {
+        data: {
+          modifiedDate: Var("modified_date")
+        }
+      })
+    )
+  )
+)
+
+Map(
+  Paginate(Match(Index("all_observations2")), { size: 1500 }),
+  Lambda(
+    "ref",
+    Let({
+      startDate: Select(["data", "startDate"], Get(Var("ref"))),
+      modifiedDate: Select(["data", "modifiedDate"], Get(Var("ref"))),
+    },
+    Update(Var("ref"), {
+      data: {
+          modifiedInDays: TimeDiff(Var("startDate"), Var("modifiedDate"), "days")
+        }
+    })
+  )
+  )
+)
+
