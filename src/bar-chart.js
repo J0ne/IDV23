@@ -8,6 +8,7 @@ export class BarChart extends LitElement {
     count: { type: Number },
     dataset: { type: Array },
     loading: { type: Boolean },
+    chartType: { type: String },
   };
 
   constructor() {
@@ -16,7 +17,9 @@ export class BarChart extends LitElement {
     this.count = 0;
     this.data = [];
     this.loading = false;
+    this.chartTypes = ["column", "bar", "line", "spline"];
     this.observationsSvc = new ObservationDataSvc();
+    this.chartType = "column";
   }
 
   async connectedCallback() {
@@ -50,16 +53,33 @@ export class BarChart extends LitElement {
 
   render() {
     return html` <div>
-        <sl-button-group label="Alignment">
+        <sl-button-group @click=${this.setTimeWindow} label="Alignment">
           <sl-button size="small" variant="default">Monthly</sl-button>
           <sl-button size="small" variant="default">Weekly</sl-button>
           <sl-button size="small" variant="default">Daily</sl-button>
         </sl-button-group>
         <sl-divider vertical></sl-divider>
-        <sl-button-group label="Alignment">
-          <sl-button size="small" variant="primary">Left</sl-button>
-          <sl-button size="small" variant="primary">Center</sl-button>
-          <sl-button size="small" variant="primary">Right</sl-button>
+        <sl-button-group @click=${this.handleChartTypeChange} label="Alignment">
+          <sl-icon-button
+            data-type="column"
+            name="bar-chart-line"
+            label="Settings"
+          ></sl-icon-button>
+          <sl-icon-button
+            data-type="bar"
+            name="bar-chart-steps"
+            label="Settings"
+          ></sl-icon-button>
+          <sl-icon-button
+            data-type="inverted-bar"
+            name="graph-up"
+            label="Settings"
+          ></sl-icon-button>
+          <sl-icon-button
+            data-type="line"
+            name="graph-up"
+            label="Settings"
+          ></sl-icon-button>
         </sl-button-group>
       </div>
       <figure id="barChart"></figure>`;
@@ -69,6 +89,29 @@ export class BarChart extends LitElement {
     this.initChart();
   }
 
+  setTimeWindow() {
+    alert("Not yet implemented");
+  }
+
+  handleChartTypeChange(e) {
+    const type = e.target.dataset.type;
+    if (type === "inverted-bar") {
+      this.chart.update({
+        chart: { type: "column", inverted: true },
+      });
+    } else {
+      this.chart.update({
+        chart: { type, inverted: false },
+      });
+      // this.chart.series.forEach((s) =>
+      //   s.update({
+      //     type,
+      //   })
+      // );
+    }
+    this.chart.redraw();
+  }
+
   updateChart() {
     const chartData = Object.keys(this.dataset[0].countsByType).map((type) => {
       return {
@@ -76,27 +119,6 @@ export class BarChart extends LitElement {
         data: this.dataset.map((obj) => obj.countsByType[type] || 0),
       };
     });
-    // const grouped = this.observationsSvc.getGroupedBy(this.dataset, "type");
-
-    // const categories = this.observationsSvc.getMonthsInCollection(
-    //   this.dataset,
-    //   "startDate"
-    // );
-    // const byMonth = data.map((item) => {
-    //   return {
-    //     stack: item.month,
-    //     data: grouped,
-    //   };
-    // });
-    // debugger;
-    // const seriesData = Object.entries(grouped).map((i) => {
-    //   return {
-    //     id: i[0],
-    //     name: i[0],
-    //     data: [i[1]],
-    //     stack: 0,
-    //   };
-    // });
 
     this.chart.xAxis[0].update({
       categories: this.dataset.map((i) => i.week),
@@ -114,14 +136,6 @@ export class BarChart extends LitElement {
       },
       chart: {
         type: "column",
-        //     styledMode: true,
-        // backgroundColor: {
-        //   linearGradient: [0, 0, 500, 500],
-        //   stops: [
-        //     [0, "rgb(255, 200, 255)"],
-        //     [1, "rgb(200, 200, 255)"],
-        //   ],
-        // },
       },
       title: {
         text: "observation",

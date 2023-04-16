@@ -99,7 +99,6 @@ export class ObservationDataSvc {
     const sortedData = sortBy(this.#observationsData, (item) => {
       return new Date(item.startTime);
     });
-    debugger;
     // Group data by month of startTime
     const groupedData = groupBy(sortedData, (item) => {
       return new Date(item.startTime).getMonth();
