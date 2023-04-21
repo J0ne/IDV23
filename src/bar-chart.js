@@ -1,10 +1,10 @@
 import Highcharts from "highcharts";
-import { LitElement, html } from "lit";
+import { LitElement, html, css } from "lit";
 import { ObservationDataSvc } from "./dataService";
 
 export class BarChart extends LitElement {
   static properties = {
-    timeRange: { type: Object },
+    dateRange: { type: Array },
     count: { type: Number },
     dataset: { type: Array },
     loading: { type: Boolean },
@@ -20,6 +20,10 @@ export class BarChart extends LitElement {
     this.chartTypes = ["column", "bar", "line", "spline"];
     this.observationsSvc = new ObservationDataSvc();
     this.chartType = "column";
+    this.dateRange = [
+      new Date(new Date().getMilliseconds() - 1000 * 60 * 24 * 14),
+      new Date(),
+    ];
   }
 
   async connectedCallback() {
@@ -31,17 +35,17 @@ export class BarChart extends LitElement {
     // this.count = this.observationsRaw.length;
     // console.log(this.observationsRaw);
 
-    // const allInRange = this.observationsSvc.getAllInTimeRange(
+    // const allInRange = this.observationsSvc.getAllIndateRange(
     //   "2023-01-01",
     //   "2023-04-15"
     // );
 
     // console.table(allInRange);
 
-    const allDataInTimeLine = this.observationsSvc.getWeeklyData();
+    // const allDataInTimeLine = this.observationsSvc.getWeeklyData();
 
-    console.table(allDataInTimeLine);
-    this.dataset = allDataInTimeLine;
+    // console.table(allDataInTimeLine);
+    // this.dataset = allDataInTimeLine;
   }
 
   willUpdate(cProps) {
@@ -49,16 +53,22 @@ export class BarChart extends LitElement {
     if (cProps.has("dataset") && this.chart) {
       this.updateChart();
     }
+    if (cProps.has("dateRange")) {
+      if (this.dateRange?.length === 2) {
+        const data = this.observationsSvc.getAllInTimeRange(
+          this.dateRange[0],
+          this.dateRange[1]
+        );
+        this.dataset = data;
+        debugger;
+        this.updateChart();
+      }
+    }
   }
 
   render() {
-    return html` <div>
-        <sl-button-group @click=${this.setTimeWindow} label="Alignment">
-          <sl-button size="small" variant="default">Monthly</sl-button>
-          <sl-button size="small" variant="default">Weekly</sl-button>
-          <sl-button size="small" variant="default">Daily</sl-button>
-        </sl-button-group>
-        <sl-divider vertical></sl-divider>
+    return html`
+      <div class="chart-types">
         <sl-button-group @click=${this.handleChartTypeChange} label="Alignment">
           <sl-icon-button
             data-type="column"
@@ -81,8 +91,9 @@ export class BarChart extends LitElement {
             label="Settings"
           ></sl-icon-button>
         </sl-button-group>
+        <figure id="barChart"></figure>
       </div>
-      <figure id="barChart"></figure>`;
+    `;
   }
 
   firstUpdated() {
@@ -113,18 +124,25 @@ export class BarChart extends LitElement {
   }
 
   updateChart() {
-    const chartData = Object.keys(this.dataset[0].countsByType).map((type) => {
-      return {
-        name: type,
-        data: this.dataset.map((obj) => obj.countsByType[type] || 0),
-      };
-    });
+    // console.log(this.dataset);
+    // const chartData = Object.keys(this.dataset[0].countsByType).map((type) => {
+    //   return {
+    //     name: type,
+    //     data: this.dataset.map((obj) => obj.countsByType[type] || 0),
+    //   };
+    // });
 
-    this.chart.xAxis[0].update({
-      categories: this.dataset.map((i) => i.week),
-    });
-
-    this.chart.update({ series: chartData });
+    // this.chart.xAxis[0].update({
+    //   categories: this.dataset.map((i) => i.week),
+    // });
+    debugger;
+    const chartData = this.observationsSvc.convertToStackedBarData(
+      this.dataset
+    );
+    debugger;
+    if (this.chart) {
+      this.chart.update({ series: chartData });
+    }
   }
 
   initChart() {
@@ -185,6 +203,13 @@ export class BarChart extends LitElement {
       ],
     });
   }
+
+  static styles = css`
+    .chart-types {
+      padding: 5px;
+      background-color: aliceblue;
+    }
+  `;
 }
 
 customElements.define("bar-chart", BarChart);

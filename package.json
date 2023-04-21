@@ -18,12 +18,14 @@
   },
   "dependencies": {
     "@material/web": "^1.0.0-pre.5",
+    "@ui5/webcomponents": "^1.12.2",
     "date-fns": "^2.29.3",
     "faunadb": "^4.8.0",
     "highcharts": "10.3.3",
     "highcharts-export-data": "0.1.7",
     "highcharts-exporting": "0.1.7",
     "lit": "^2.6.1",
+    "lit-flatpickr": "^0.4.0",
     "lodash-es": "^4.17.21",
     "mathjs": "^11.8.0"
   },

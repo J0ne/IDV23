@@ -7,6 +7,10 @@ import {
   map,
   sortBy,
   orderBy,
+  find,
+  forEach,
+  uniq,
+  flatMap,
 } from "lodash-es";
 
 import { startOfWeek, endOfWeek, format, startOfYear } from "date-fns";
@@ -16,7 +20,10 @@ export class ObservationDataSvc {
 
   async init() {
     const response = await fetch("../.netlify/functions/read-all");
-    this.#observationsData = await response.json();
+    const rawData = await response.json();
+    this.#observationsData = rawData.map((item) => {
+      return { ...item, type: item.type.replace("_DEV", "") };
+    });
   }
 
   getCountsBy(val) {
@@ -33,7 +40,7 @@ export class ObservationDataSvc {
   getAllInTimeRange(from, to) {
     const filteredItems = filter(this.#observationsData, (item) => {
       const itemDate = new Date(item.startDate);
-      return itemDate >= new Date(from) && itemDate <= new Date(to);
+      return itemDate >= from && itemDate <= to;
     });
     return filteredItems;
   }
@@ -138,5 +145,65 @@ export class ObservationDataSvc {
       "startDate",
     ]);
     return sortedResult;
+  }
+
+  convertToStackedBarData(data) {
+    // Group the data by type and date
+    const groupedData = groupBy(
+      data,
+      (item) => item.type + "_" + item.startDate
+    );
+
+    // Map the grouped data to an array of series
+    const series = map(groupedData, (items, key) => {
+      const [type, startDate] = key.split("_");
+
+      // Group the items by state
+      const groupedItems = groupBy(items, "state");
+
+      // Map the grouped items to an array of values
+      const values = map(groupedItems, (groupedItems, state) => {
+        return {
+          name: state,
+          y: groupedItems.length,
+        };
+      });
+
+      return {
+        name: type,
+        data: values,
+        startDate: new Date(startDate).getTime(),
+      };
+    });
+    debugger;
+    // Reduce the series to an array of unique dates
+    const uniqueDates = uniq(
+      flatMap(series, (item) => new Date(item.startDate))
+    ).sort();
+
+    // Map the unique dates to an array of categories
+    const categories = map(uniqueDates, (date) =>
+      new Date(date).toLocaleDateString()
+    );
+
+    // Map the series to an array of data points
+    const dataPoints = map(series, (item) => {
+      const point = {
+        name: item.name,
+        data: [],
+      };
+
+      forEach(uniqueDates, (date) => {
+        const data = find(item.data, { name: "RESOLVED" });
+        point.data.push(data ? data.y : 0);
+      });
+
+      return point;
+    });
+
+    return {
+      categories,
+      series: dataPoints,
+    };
   }
 }
