@@ -59,8 +59,7 @@ export class BarChart extends LitElement {
           this.dateRange[0],
           this.dateRange[1]
         );
-        this.dataset = data;
-        debugger;
+        this.dataset = this.observationsSvc.getDailyData(data);
         this.updateChart();
       }
     }
@@ -125,21 +124,18 @@ export class BarChart extends LitElement {
 
   updateChart() {
     // console.log(this.dataset);
-    // const chartData = Object.keys(this.dataset[0].countsByType).map((type) => {
-    //   return {
-    //     name: type,
-    //     data: this.dataset.map((obj) => obj.countsByType[type] || 0),
-    //   };
-    // });
 
-    // this.chart.xAxis[0].update({
-    //   categories: this.dataset.map((i) => i.week),
-    // });
-    debugger;
-    const chartData = this.observationsSvc.convertToStackedBarData(
-      this.dataset
-    );
-    debugger;
+    const chartData = Object.keys(this.dataset[0].countsByType).map((type) => {
+      return {
+        name: type,
+        data: this.dataset.map((obj) => obj.countsByType[type] || 0),
+      };
+    });
+
+    this.chart.xAxis[0].update({
+      categories: this.dataset.map((i) => i.day),
+    });
+    console.table(chartData);
     if (this.chart) {
       this.chart.update({ series: chartData });
     }

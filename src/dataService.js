@@ -13,7 +13,14 @@ import {
   flatMap,
 } from "lodash-es";
 
-import { startOfWeek, endOfWeek, format, startOfYear } from "date-fns";
+import {
+  startOfWeek,
+  endOfWeek,
+  startOfDay,
+  endOfDay,
+  format,
+  startOfYear,
+} from "date-fns";
 
 export class ObservationDataSvc {
   #observationsData = null;
@@ -205,5 +212,44 @@ export class ObservationDataSvc {
       categories,
       series: dataPoints,
     };
+  }
+
+  getDailyData(collection) {
+    const sortedData = sortBy(collection, (item) => {
+      return new Date(item.startTime);
+    });
+    // Group data by day of startTime
+    const groupedData = groupBy(sortedData, (item) => {
+      return new Date(item.startTime).toISOString().slice(0, 10);
+    });
+
+    // Calculate counts by types in each day
+    const dailyData = map(groupedData, (group, key) => {
+      const dayStart = startOfDay(new Date(group[0].startTime));
+      const dayEnd = endOfDay(new Date(group[0].startTime));
+      const day = `${format(dayStart, "MMM dd, yyyy")}`;
+
+      const countsByType = reduce(
+        group,
+        (result, item) => {
+          if (!result[item.type]) {
+            result[item.type] = 0;
+          }
+          result[item.type]++;
+          return result;
+        },
+        {}
+      );
+      return {
+        day,
+        countsByType,
+        startDate: new Date(group[0].startDate),
+      };
+    });
+    const sortedResult = orderBy(dailyData, [
+      (item) => startOfYear(item.startDate),
+      "startDate",
+    ]);
+    return sortedResult;
   }
 }
