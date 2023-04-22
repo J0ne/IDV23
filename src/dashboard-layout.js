@@ -2,6 +2,16 @@ import { LitElement, html, css } from "lit";
 import "./bar-chart.js";
 import "@ui5/webcomponents/dist/DateRangePicker.js";
 import "lit-flatpickr";
+import {
+  startOfToday,
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  startOfQuarter,
+  endOfQuarter,
+  subMonths,
+  subQuarters,
+} from "date-fns";
 
 export class DashboardLayout extends LitElement {
   static properties = {
@@ -13,7 +23,8 @@ export class DashboardLayout extends LitElement {
       <div class="container">
         <div class="controls">
           <!-- <ui5-daterange-picker .firstDayOfWeek=3 ></i5-daterange-picker> -->
-          <lit-flatpickr
+          <div class="date-range">
+             <lit-flatpickr
             id="my-date-picker"
             mode="range"
             altFormat="F j, Y"
@@ -27,7 +38,14 @@ export class DashboardLayout extends LitElement {
               type="text"
               placeholder="Select date range"
             ></sl-input>
-          </lit-flatpickr>
+              </lit-flatpickr>
+          </div>
+
+          <sl-button-group class="time-range-buttons" label="Time ranges">
+  <sl-button @click=${this.lastQuarter} size="medium" pill>Last quarter</sl-button>
+  <sl-button @click=${this.lastMonth} size="medium" pill>Last month</sl-button>
+  <sl-button @click=${this.last14days} size="medium" pill>Last 14 days</sl-button>
+</sl-button-group>
           <div class="button-group-toolbar">
             <sl-button-group label="History">
               <sl-tooltip content="Undo">
@@ -40,43 +58,6 @@ export class DashboardLayout extends LitElement {
                   ><sl-icon name="arrow-clockwise" label="Redo"></sl-icon
                 ></sl-button>
               </sl-tooltip>
-            </sl-button-group>
-
-            <sl-button-group label="Formatting">
-              <sl-tooltip content="Bold">
-                <sl-button
-                  ><sl-icon name="type-bold" label="Bold"></sl-icon
-                ></sl-button>
-              </sl-tooltip>
-              <sl-tooltip content="Italic">
-                <sl-button
-                  ><sl-icon name="type-italic" label="Italic"></sl-icon
-                ></sl-button>
-              </sl-tooltip>
-              <sl-tooltip content="Underline">
-                <sl-button
-                  ><sl-icon name="type-underline" label="Underline"></sl-icon
-                ></sl-button>
-              </sl-tooltip>
-            </sl-button-group>
-
-            <sl-button-group label="Alignment">
-              <sl-tooltip content="Align Left">
-                <sl-button
-                  ><sl-icon name="justify-left" label="Align Left"></sl-icon
-                ></sl-button>
-              </sl-tooltip>
-              <sl-tooltip content="Align Center">
-                <sl-button
-                  ><sl-icon name="justify" label="Align Center"></sl-icon
-                ></sl-button>
-              </sl-tooltip>
-              <sl-tooltip content="Align Right">
-                <sl-button
-                  ><sl-icon name="justify-right" label="Align Right"></sl-icon
-                ></sl-button>
-              </sl-tooltip>
-            </sl-button-group>
           </div>
         </div>
         <div class="pictograms"></div>
@@ -93,13 +74,13 @@ export class DashboardLayout extends LitElement {
     `;
   }
 
+  firstUpdated() {
+    this.#datePicker = this.shadowRoot.querySelector("lit-flatpickr");
+  }
+
   #datePicker = null;
 
   handleDateRangeSelect() {
-    if (!this.#datePicker) {
-      this.#datePicker = this.shadowRoot.querySelector("lit-flatpickr");
-    }
-
     const values = this.#datePicker.getSelectedDates();
 
     console.log(values);
@@ -114,6 +95,36 @@ export class DashboardLayout extends LitElement {
     }
   }
 
+  // last14days function
+  last14days() {
+    const today = startOfToday();
+
+    const firstDay = subDays(today, 13);
+
+    this.dateRange = [firstDay, today];
+    console.log(this.dateRange);
+
+    this.#datePicker.setDate(this.dateRange, false);
+  }
+
+  // lastMonth function
+  lastMonth() {
+    const start = startOfMonth(subMonths(startOfToday(), 1));
+    const end = endOfMonth(subMonths(startOfToday(), 1));
+    this.dateRange = [start, end];
+    console.log(this.dateRange);
+    this.#datePicker.setDate(this.dateRange, false);
+  }
+
+  // lastQuarter function
+  lastQuarter() {
+    const start = startOfQuarter(subQuarters(startOfToday(), 1));
+    const end = endOfQuarter(subQuarters(startOfToday(), 1));
+    this.dateRange = [start, end];
+    console.log(this.dateRange);
+    this.#datePicker.setDate(this.dateRange, false);
+  }
+
   static styles = css`
     .container {
       display: grid;
@@ -124,7 +135,15 @@ export class DashboardLayout extends LitElement {
     }
 
     .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 0px 4px;
+      grid-template-areas: ". . . ." 1fr / 1fr 1fr 1fr 1fr;
       grid-area: 1 / 1 / 2 / 5;
+      align-items: end;
+      justify-items: end;
+      justify-content: start;
+      align-content: stretch;
     }
 
     .pictograms {
@@ -132,7 +151,7 @@ export class DashboardLayout extends LitElement {
     }
 
     .overall-graph {
-      grid-area: 3 / 1 / 4 / 3;
+      grid-area: 3 / 1 / 3 / 4;
     }
 
     .secondary-graph {
@@ -173,6 +192,10 @@ export class DashboardLayout extends LitElement {
       width: 20rem;
     }
 
+    sl-button-group.time-range-buttons {
+      margin-top: 6px;
+    }
+
     .button-group-toolbar sl-button-group:not(:last-of-type) {
       margin-right: var(--sl-spacing-x-small);
     }
@@ -193,6 +216,10 @@ export class DashboardLayout extends LitElement {
 
     .card-header sl-icon-button {
       font-size: var(--sl-font-size-medium);
+    }
+
+    .date-range-picker {
+      grid-area: 2 / 3 / 3 / 4;
     }
   `;
 }

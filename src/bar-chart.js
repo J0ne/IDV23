@@ -1,4 +1,5 @@
 import Highcharts from "highcharts";
+import "highcharts/modules/no-data-to-display.js";
 import { LitElement, html, css } from "lit";
 import { ObservationDataSvc } from "./dataService";
 
@@ -31,21 +32,6 @@ export class BarChart extends LitElement {
     // const response = await fetch("../.netlify/functions/read-all");
     // const data = await response.json();
     await this.observationsSvc.init();
-
-    // this.count = this.observationsRaw.length;
-    // console.log(this.observationsRaw);
-
-    // const allInRange = this.observationsSvc.getAllIndateRange(
-    //   "2023-01-01",
-    //   "2023-04-15"
-    // );
-
-    // console.table(allInRange);
-
-    // const allDataInTimeLine = this.observationsSvc.getWeeklyData();
-
-    // console.table(allDataInTimeLine);
-    // this.dataset = allDataInTimeLine;
   }
 
   willUpdate(cProps) {
@@ -62,6 +48,13 @@ export class BarChart extends LitElement {
         this.dataset = this.observationsSvc.getDailyData(data);
         this.updateChart();
       }
+    }
+  }
+
+  showNoData() {
+    console.log("Todo!");
+    if (this.chart) {
+      // this.chart.showNoData("No data available for this range");
     }
   }
 
@@ -124,7 +117,12 @@ export class BarChart extends LitElement {
 
   updateChart() {
     // console.log(this.dataset);
-
+    debugger;
+    if (this.dataset?.length === 0) {
+      this.chart.update({ series: [] });
+      debugger;
+      return;
+    }
     const chartData = Object.keys(this.dataset[0].countsByType).map((type) => {
       return {
         name: type,
@@ -150,6 +148,9 @@ export class BarChart extends LitElement {
       },
       chart: {
         type: "column",
+        zooming: {
+          type: "x",
+        },
       },
       title: {
         text: "observation",
@@ -202,7 +203,6 @@ export class BarChart extends LitElement {
 
   static styles = css`
     .chart-types {
-      padding: 5px;
       background-color: aliceblue;
     }
   `;
