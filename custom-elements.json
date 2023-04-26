@@ -1,0 +1,714 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "dist/idv23-app.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "He",
+          "members": [
+            {
+              "kind": "method",
+              "name": "properties",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated"
+            },
+            {
+              "kind": "method",
+              "name": "initChart"
+            },
+            {
+              "kind": "method",
+              "name": "createRenderRoot",
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "U"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderOptions",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ host: this }",
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_$Do",
+              "default": "void 0",
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "jt",
+            "module": "dist/idv23-app.js"
+          },
+          "tagName": "bar-chart",
+          "customElement": true
+        },
+        {
+          "kind": "class",
+          "description": "",
+          "name": "We",
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "static": true,
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "_onClick"
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "static": true,
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "docsHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Click on the Vite and Lit logos to learn more\""
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "createRenderRoot",
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "U"
+                }
+              ],
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderOptions",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ host: this }",
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_$Do",
+              "default": "void 0",
+              "inheritedFrom": {
+                "name": "jt",
+                "module": "dist/idv23-app.js"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "jt",
+            "module": "dist/idv23-app.js"
+          },
+          "tagName": "my-element",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "bar-chart",
+          "declaration": {
+            "name": "He",
+            "module": "dist/idv23-app.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "my-element",
+          "declaration": {
+            "name": "We",
+            "module": "dist/idv23-app.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/bar-chart.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "BarChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{\n    dateRange: { type: Array },\n    count: { type: Number },\n    dataset: { type: Array },\n    loading: { type: Boolean },\n    chartType: { type: String },\n  }"
+            },
+            {
+              "kind": "method",
+              "name": "willUpdate",
+              "parameters": [
+                {
+                  "name": "cProps"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "showNoData"
+            },
+            {
+              "kind": "method",
+              "name": "render"
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated"
+            },
+            {
+              "kind": "method",
+              "name": "setTimeWindow"
+            },
+            {
+              "kind": "method",
+              "name": "handleChartTypeChange",
+              "parameters": [
+                {
+                  "name": "e"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updateChart"
+            },
+            {
+              "kind": "method",
+              "name": "initChart"
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "static": true,
+              "default": "css`\n    .chart-types {\n      background-color: aliceblue;\n    }\n  `"
+            },
+            {
+              "kind": "field",
+              "name": "dataset",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "chartTypes",
+              "type": {
+                "text": "array"
+              },
+              "default": "[\"column\", \"bar\", \"line\", \"spline\"]"
+            },
+            {
+              "kind": "field",
+              "name": "observationsSvc",
+              "default": "new ObservationDataSvc()"
+            },
+            {
+              "kind": "field",
+              "name": "chartType",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"column\""
+            },
+            {
+              "kind": "field",
+              "name": "dateRange",
+              "type": {
+                "text": "array"
+              },
+              "default": "[\n      new Date(new Date().getMilliseconds() - 1000 * 60 * 24 * 14),\n      new Date(),\n    ]"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "bar-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "BarChart",
+          "declaration": {
+            "name": "BarChart",
+            "module": "src/bar-chart.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "bar-chart",
+          "declaration": {
+            "name": "BarChart",
+            "module": "src/bar-chart.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/dashboard-layout.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "DashboardLayout",
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{\n    dateRange: { type: Array },\n  }"
+            },
+            {
+              "kind": "method",
+              "name": "render"
+            },
+            {
+              "kind": "method",
+              "name": "firstUpdated"
+            },
+            {
+              "kind": "field",
+              "name": "#datePicker",
+              "privacy": "private",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "handleDateRangeSelect"
+            },
+            {
+              "kind": "method",
+              "name": "last14days"
+            },
+            {
+              "kind": "method",
+              "name": "lastMonth"
+            },
+            {
+              "kind": "method",
+              "name": "lastQuarter"
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "static": true,
+              "default": "css`\n    .container {\n      display: grid;\n      grid-template-columns: repeat(4, 1fr);\n      grid-template-rows: 0.2fr 0.9fr 1.5fr 1.4fr 1fr;\n      gap: 10px 10px;\n      grid-auto-flow: row;\n    }\n\n    .controls {\n      display: grid;\n      grid-template-columns: 1fr 1fr 1fr 1fr;\n      gap: 0px 4px;\n      grid-template-areas: \". . . .\" 1fr / 1fr 1fr 1fr 1fr;\n      grid-area: 1 / 1 / 2 / 5;\n      align-items: end;\n      justify-items: end;\n      justify-content: start;\n      align-content: stretch;\n    }\n\n    .pictograms {\n      grid-area: 2 / 1 / 3 / 5;\n    }\n\n    .overall-graph {\n      grid-area: 3 / 1 / 3 / 4;\n    }\n\n    .secondary-graph {\n      display: grid;\n      grid-template-columns: repeat(3, 1fr);\n      grid-template-rows: repeat(3, 1fr);\n      gap: 0px 0px;\n      grid-auto-flow: row;\n      grid-template-areas:\n        \". . .\"\n        \". . .\"\n        \". . .\";\n      grid-area: 3 / 3 / 4 / 5;\n    }\n\n    .pg-1 {\n      grid-area: 2 / 1 / 3 / 2;\n    }\n\n    .pg-2 {\n      grid-area: 2 / 2 / 3 / 3;\n    }\n\n    .pg-3 {\n      grid-area: 2 / 3 / 3 / 4;\n    }\n\n    .pg-4 {\n      grid-area: 2 / 4 / 3 / 5;\n    }\n\n    lit-flatpickr {\n      cursor: pointer;\n      font-size: 38px;\n    }\n\n    sl-input {\n      width: 20rem;\n    }\n\n    sl-button-group.time-range-buttons {\n      margin-top: 6px;\n    }\n\n    .button-group-toolbar sl-button-group:not(:last-of-type) {\n      margin-right: var(--sl-spacing-x-small);\n    }\n\n    .card-header {\n      max-width: 300px;\n    }\n\n    .card-header [slot=\"header\"] {\n      display: flex;\n      align-items: center;\n      justify-content: space-between;\n    }\n\n    .card-header h3 {\n      margin: 0;\n    }\n\n    .card-header sl-icon-button {\n      font-size: var(--sl-font-size-medium);\n    }\n\n    .date-range-picker {\n      grid-area: 2 / 3 / 3 / 4;\n    }\n  `"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "dashboard-layout",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DashboardLayout",
+          "declaration": {
+            "name": "DashboardLayout",
+            "module": "src/dashboard-layout.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "dashboard-layout",
+          "declaration": {
+            "name": "DashboardLayout",
+            "module": "src/dashboard-layout.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/dataService.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "ObservationDataSvc",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#observationsData",
+              "privacy": "private",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "method",
+              "name": "init"
+            },
+            {
+              "kind": "method",
+              "name": "getCountsBy",
+              "parameters": [
+                {
+                  "name": "val"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getCountFromArrayBy",
+              "parameters": [
+                {
+                  "name": "arr"
+                },
+                {
+                  "name": "val"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getAllInTimeRange",
+              "parameters": [
+                {
+                  "name": "from"
+                },
+                {
+                  "name": "to"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getGroupedBy",
+              "parameters": [
+                {
+                  "name": "collection"
+                },
+                {
+                  "name": "grouping"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getMonthsInCollection",
+              "parameters": [
+                {
+                  "name": "collection"
+                },
+                {
+                  "name": "field"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getMonthlyData"
+            },
+            {
+              "kind": "method",
+              "name": "getWeeklyData"
+            },
+            {
+              "kind": "method",
+              "name": "convertToStackedBarData",
+              "parameters": [
+                {
+                  "name": "data"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getDailyData",
+              "parameters": [
+                {
+                  "name": "collection"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "ObservationDataSvc",
+          "declaration": {
+            "name": "ObservationDataSvc",
+            "module": "src/dataService.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/idv-application.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "An example element.",
+          "name": "MyElement",
+          "cssParts": [
+            {
+              "description": "The button",
+              "name": "button"
+            }
+          ],
+          "slots": [
+            {
+              "description": "This element has a slot",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "static": true,
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "render"
+            },
+            {
+              "kind": "method",
+              "name": "_onClick"
+            },
+            {
+              "kind": "field",
+              "name": "docsHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Click on the Vite and Lit logos to learn more\""
+            },
+            {
+              "kind": "field",
+              "name": "count",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            }
+          ],
+          "superclass": {
+            "name": "LitElement",
+            "package": "lit"
+          },
+          "tagName": "idv-application",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "MyElement",
+          "declaration": {
+            "name": "MyElement",
+            "module": "src/idv-application.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "idv-application",
+          "declaration": {
+            "name": "MyElement",
+            "module": "src/idv-application.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "netlify/functions/getobservations/getObservations.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "parameters": [
+            {
+              "name": "event"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "handler",
+          "declaration": {
+            "name": "handler",
+            "module": "netlify/functions/getobservations/getObservations.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "netlify/functions/hello-world/hello-world.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "parameters": [
+            {
+              "name": "event"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "handler",
+          "declaration": {
+            "name": "handler",
+            "module": "netlify/functions/hello-world/hello-world.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "netlify/functions/read-all/read-all.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "handler",
+          "parameters": [
+            {
+              "name": "event"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "handler",
+          "declaration": {
+            "name": "handler",
+            "module": "netlify/functions/read-all/read-all.js"
+          }
+        }
+      ]
+    }
+  ]
+}
