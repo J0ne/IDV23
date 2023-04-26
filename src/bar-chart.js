@@ -1,4 +1,5 @@
 import Highcharts from "highcharts";
+// import "highcharts/es-modules/Extensions/NoDataToDisplay.js";
 import "highcharts/modules/no-data-to-display.js";
 import { LitElement, html, css } from "lit";
 import { ObservationDataSvc } from "./dataService";
@@ -6,7 +7,7 @@ import { ObservationDataSvc } from "./dataService";
 export class BarChart extends LitElement {
   static properties = {
     dateRange: { type: Array },
-    count: { type: Number },
+    total: { type: Number },
     dataset: { type: Array },
     loading: { type: Boolean },
     chartType: { type: String },
@@ -15,7 +16,7 @@ export class BarChart extends LitElement {
   constructor() {
     super();
     this.dataset = [];
-    this.count = 0;
+    this.total = 0;
     this.data = [];
     this.loading = false;
     this.chartTypes = ["column", "bar", "line", "spline"];
@@ -35,7 +36,6 @@ export class BarChart extends LitElement {
   }
 
   willUpdate(cProps) {
-    console.log(cProps);
     if (cProps.has("dataset") && this.chart) {
       this.updateChart();
     }
@@ -45,18 +45,22 @@ export class BarChart extends LitElement {
           this.dateRange[0],
           this.dateRange[1]
         );
+        this.total = data.length;
+
+        this.typesAndCounts = this.observationsSvc.getGroupedBy(data, "type");
+
         this.dataset = this.observationsSvc.getDailyData(data);
         this.updateChart();
       }
     }
   }
 
-  showNoData() {
-    console.log("Todo!");
-    if (this.chart) {
-      // this.chart.showNoData("No data available for this range");
-    }
-  }
+  // showNoData() {
+  //   console.log("Todo!");
+  //   if (this.chart) {
+  //     // this.chart.showNoData("No data available for this range");
+  //   }
+  // }
 
   render() {
     return html`
@@ -117,37 +121,66 @@ export class BarChart extends LitElement {
 
   updateChart() {
     // console.log(this.dataset);
-    debugger;
-    if (this.dataset?.length === 0) {
-      this.chart.update({ series: [] });
-      debugger;
-      return;
-    }
-    const chartData = Object.keys(this.dataset[0].countsByType).map((type) => {
-      return {
-        name: type,
-        data: this.dataset.map((obj) => obj.countsByType[type] || 0),
-      };
-    });
 
-    this.chart.xAxis[0].update({
-      categories: this.dataset.map((i) => i.day),
-    });
-    console.table(chartData);
-    if (this.chart) {
-      this.chart.update({ series: chartData });
+    let chartData = [];
+    if (this.dataset?.length === 0) {
+      this.chart.showLoading("No data");
+
+      this.total = 0;
+    } else {
+      this.chart.hideLoading();
+
+      //const allSeries = Object.keys(this.typesAndCounts).sort((a, b) => a - b);
+
+      while (this.chart.series.length) {
+        this.chart.series[0].remove();
+      }
+      // this.chart.series.forEach((s) => {
+      //   if (!allSeries.includes(s.id)) {
+      //     s.remove();
+      //   }
+      // });
+
+      // allSeries.forEach((s) => {
+      //   this.chart.addSeries({
+      //     id: s,
+      //     name: s,
+      //     data: [],
+      //   });
+      // });
+
+      chartData = Object.keys(this.typesAndCounts)
+        .sort((a, b) => a - b)
+        .forEach((type) => {
+          this.chart.addSeries({
+            id: type,
+            name: type,
+            data: this.dataset.map((obj) => obj.countsByType[type] || 0),
+          });
+        });
+
+      this.chart.xAxis[0].setCategories(this.dataset.map((i) => i.day));
     }
+
+    const event = new CustomEvent("data-changed", {
+      detail: { types: this.typesAndCounts, total: this.total },
+    });
+    this.dispatchEvent(event);
+    // if (this.chart) {
+    //   this.chart.update({ series: chartData });
+    // }
   }
 
   initChart() {
-    console.log("render");
     const container = this.renderRoot.getElementById("barChart");
     this.chart = Highcharts.chart(container, {
       credits: {
         enabled: false,
       },
+      colors: ["#7cb5ec", "#434348", "#90ed7d", "#f7a35c"],
       chart: {
         type: "column",
+        colorCount: 4,
         zooming: {
           type: "x",
         },
@@ -165,6 +198,16 @@ export class BarChart extends LitElement {
       xAxis: {
         type: "datetime",
       },
+      lang: {
+        noData: "Nichts zu anzsdfsdfsdfeigen",
+      },
+      noData: {
+        style: {
+          fontWeight: "bold",
+          fontSize: "15px",
+          color: "#303030",
+        },
+      },
       // xAxis: {
       //   categories: [
       //   ],
@@ -178,21 +221,30 @@ export class BarChart extends LitElement {
       //   valueSuffix: "million liters",
       // },
       series: [
-        {
-          data: [],
-          stack: 0,
-          // pointInterval: 24 * 3600 * 1000,
-        },
-        {
-          data: [],
-          stack: 0,
-          // pointInterval: 24 * 3600 * 1000,
-        },
-        {
-          data: [],
-          stack: 0,
-          // pointInterval: 24 * 3600 * 1000,
-        },
+        // {
+        //   id: "VALUE",
+        //   data: [],
+        //   stack: 0,
+        //   // pointInterval: 24 * 3600 * 1000,
+        // },
+        // {
+        //   id: "HARMONY",
+        //   data: [],
+        //   stack: 0,
+        //   // pointInterval: 24 * 3600 * 1000,
+        // },
+        // {
+        //   id: "VARIANCE",
+        //   data: [],
+        //   stack: 0,
+        //   // pointInterval: 24 * 3600 * 1000,
+        // },
+        // {
+        //   id: "USER_PERIOD",
+        //   data: [],
+        //   stack: 0,
+        //   // pointInterval: 24 * 3600 * 1000,
+        // },
         // {
         //   data: [10],
         //   stack: 0,

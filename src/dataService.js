@@ -46,7 +46,7 @@ export class ObservationDataSvc {
 
   getAllInTimeRange(from, to) {
     const filteredItems = filter(this.#observationsData, (item) => {
-      const itemDate = new Date(item.startDate);
+      const itemDate = Date.parse(item.startDate);
       return itemDate >= from && itemDate <= to;
     });
     return filteredItems;

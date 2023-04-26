@@ -1,10 +1,12 @@
 import { LitElement, css, html } from "lit";
+import "@shoelace-style/shoelace/dist/themes/light.css";
+import "@shoelace-style/shoelace";
+import { setBasePath } from "@shoelace-style/shoelace/dist/utilities/base-path.js";
 import "highcharts";
 import "highcharts-exporting";
 import "./dashboard-layout.js";
 
-import litLogo from "./assets/lit.svg";
-import viteLogo from "/vite.svg";
+setBasePath("https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.4.0/dist");
 
 /**
  * An example element.
