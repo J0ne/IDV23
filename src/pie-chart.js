@@ -74,7 +74,9 @@ export class PieChart extends LitElement {
         plotBorderWidth: null,
         plotShadow: false,
         type: "pie",
+        colorCount: 4,
       },
+      colors: ["#E3443B", "#E3C746", "#3BE37B", "#6968E3"],
       title: {
         text: "Deviation types",
         align: "left",

@@ -19,7 +19,7 @@ export class DashboardLayout extends LitElement {
     .container {
       display: grid;
       grid-template-columns: 1fr 0.9fr 1fr;
-      grid-template-rows: 0.3fr 1fr 1.5fr 1.4fr 1fr;
+      grid-template-rows: 0.3fr 1fr 1.5fr;
       gap: 10px 10px;
       grid-auto-flow: row;
     }
@@ -53,7 +53,7 @@ export class DashboardLayout extends LitElement {
       grid-area: 2 / 2 / 3 / 3;
     }
 
-    .pg-4 {
+    .pg-3 {
       grid-area: 2 / 3 / 3 / 4;
     }
 
@@ -63,6 +63,12 @@ export class DashboardLayout extends LitElement {
 
     .pie-chart {
       grid-area: 3 / 3 / 4 / 4;
+    }
+
+    div[class^="pg-"] {
+      border: 1px solid darkgreen;
+      background-color: whitesmoke;
+      padding: 10px;
     }
 
     lit-flatpickr {
@@ -150,7 +156,7 @@ export class DashboardLayout extends LitElement {
     this.last14days
   } size="medium" pill>Last 14 days</sl-button>
 </sl-button-group>
-          <div class="button-group-toolbar">
+          <!-- <div class="button-group-toolbar">
             <sl-button-group label="History">
               <sl-tooltip content="Undo">
                 <sl-button
@@ -162,7 +168,7 @@ export class DashboardLayout extends LitElement {
                   ><sl-icon name="arrow-clockwise" label="Redo"></sl-icon
                 ></sl-button>
               </sl-tooltip>
-          </div>
+          </div> -->
         </div>
   <div class="pictograms">
 
@@ -194,8 +200,9 @@ export class DashboardLayout extends LitElement {
             : ""
         }
         </div>
-        <div class="pg-3"></div>
-  <div class="pg-4"></div>
+        <div class="pg-3">
+        </div>
+
   <div class="pie-chart">
       <pie-chart .data=${this.devTypeSummary}></pie-chart>
   </div>

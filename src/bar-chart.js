@@ -150,7 +150,7 @@ export class BarChart extends LitElement {
       // });
 
       chartData = Object.keys(this.typesAndCounts)
-        .sort((a, b) => a - b)
+        .sort((a, b) => b - a)
         .forEach((type) => {
           this.chart.addSeries({
             id: type,
@@ -177,7 +177,7 @@ export class BarChart extends LitElement {
       credits: {
         enabled: false,
       },
-      colors: ["#7cb5ec", "#434348", "#90ed7d", "#f7a35c"],
+      colors: ["#E3443B", "#E3C746", "#3BE37B", "#6968E3"],
       chart: {
         type: "column",
         colorCount: 4,

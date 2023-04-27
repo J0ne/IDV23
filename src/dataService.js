@@ -22,6 +22,13 @@ import {
   startOfYear,
 } from "date-fns";
 
+const demoTypes = new Map([
+  ["VARIANCE", "TYPE 1"],
+  ["VALUE", "TYPE 2"],
+  ["USER_PERIOD", "TYPE 3"],
+  ["HARMONY", "HELL IS LOOSE!"],
+]);
+
 export class ObservationDataSvc {
   #observationsData = null;
 
@@ -29,7 +36,7 @@ export class ObservationDataSvc {
     const response = await fetch("../.netlify/functions/read-all");
     const rawData = await response.json();
     this.#observationsData = rawData.map((item) => {
-      return { ...item, type: item.type.replace("_DEV", "") };
+      return { ...item, type: demoTypes.get(item.type.replace("_DEV", "")) };
     });
   }
 
