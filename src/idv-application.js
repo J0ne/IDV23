@@ -34,14 +34,12 @@ export class MyElement extends LitElement {
     this.docsHint = "Click on the Vite and Lit logos to learn more";
     this.count = 0;
   }
+  createRenderRoot() {
+    return this;
+  }
 
   render() {
-    return html`
-      <header>
-        <h2>Observer Dashboard</h2>
-      </header>
-      <dashboard-layout></dashboard-layout>
-    `;
+    return html` <dashboard-layout></dashboard-layout> `;
   }
 
   _onClick() {

@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "lit";
+import { classMap } from "lit/directives/class-map.js";
 import "./bar-chart.js";
 import "./pie-chart.js";
 import "lit-flatpickr";
@@ -117,12 +118,25 @@ export class DashboardLayout extends LitElement {
       width: 100%;
     }
 
-    sl-card.metrics-tile::part(base) {
+    sl-card.critical::part(base) {
+      background-color: var(--sl-color-danger-400);
+    }
+    sl-card.high::part(base) {
       background-color: var(--sl-color-warning-400);
+    }
+    sl-card.total::part(base) {
+      background-color: var(--sl-color-primary-100);
     }
 
     .mega-metric {
       font-size: var(--sl-font-size-4x-large);
+    }
+
+    .metric-icon {
+      font-size: 36px;
+      position: relative;
+      top: -25px;
+      right: 5px;
     }
   `;
 
@@ -198,54 +212,65 @@ export class DashboardLayout extends LitElement {
   </div>
   <div class="secondary-graph"></div>
    <div class="pg-1">
-${
-  this.dateRange?.length && this.dateRange.length === 2
-    ? html`
-        <sl-card class="metrics-tile">
-          <!-- <div slot="header">
-            ${format(new Date(this.dateRange[0]), "dd.MM.yyyy")} -
-            ${format(new Date(this.dateRange[1]), "dd.MM.yyyy")}
-          </div> -->
-
-          <sl-icon
-            name="graph-up"
-            style="font-size: 36px; position: relative; top: 10px; right: 10px;"
-          ></sl-icon>
-          <div style="font-size: 48px; font-weight: bold; text-align: center;">
-            <span class="mega-metric"> ${this.total} </span>
-          </div>
-          <div
-            style="font-size: 16px; font-weight: normal; text-align: center;"
-          >
-            in total
-          </div>
-        </sl-card>
-      `
-    : ""
-}
+    ${this.getMegaMetric(this.total, "total", "calendar-range", "all")}
         </div>
         <div class="pg-2">
-        ${
-          this.devTypeSummary
-            ? this.getSummaryFromEntries(this.devTypeSummary)
-            : ""
-        }
+        ${this.getMegaMetric(
+          this.highObservations,
+          "high",
+          "exclamation-octagon",
+          "high"
+        )}
         </div>
         <div class="pg-3">
+           ${this.getMegaMetric(
+             this.criticalObservations,
+             "critical",
+             "radioactive",
+             "critical"
+           )}
         </div>
 
   <div class="pie-chart">
       <pie-chart .data=${this.devTypeSummary}></pie-chart>
   </div>
 </div>
-
-
     `;
+  }
+
+  shouldShow() {
+    return this.dateRange?.length === 2;
+  }
+
+  getMegaMetric(value, type, iconName, header) {
+    if (!this.shouldShow()) {
+      return "";
+    }
+
+    const classes = {
+      "metrics-tile mega-metric total": type === "total",
+      "metrics-tile mega-metric critical": type === "critical",
+      "metrics-tile mega-metric high": type === "high",
+    };
+
+    return html`<sl-card class=${classMap(classes)}>
+      <sl-icon name=${iconName} class="metric-icon"></sl-icon>
+      <span style="font-size: 18px;">${header.toUpperCase()}</span>
+      <div style="font-weight: bold; text-align: center;">
+        <span class="">${value}</span>
+      </div>
+      <div style="font-size: 16px; font-weight: normal; text-align: center;">
+        in total
+      </div>
+    </sl-card>`;
   }
 
   handleDataUpdates(dataSummary) {
     this.devTypeSummary = dataSummary.types;
     this.total = dataSummary.total;
+
+    this.criticalObservations = this.devTypeSummary["CRITICAL"] ?? 0;
+    this.highObservations = this.devTypeSummary["HIGH"] ?? 0;
 
     console.log(this.devTypeSummary);
   }
