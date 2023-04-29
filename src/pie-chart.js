@@ -1,23 +1,13 @@
 import { LitElement, css, html } from "lit";
 import Highcharts, { objectEach } from "highcharts";
 import "highcharts/modules/no-data-to-display";
-// import HighchartsExporting from "highcharts/modules/exporting";
-// HighchartsExporting(Highcharts);
 
-// const data = [
-//   {
-//     name: "HARMONY",
-//     y: 1,
-//   },
-//   {
-//     name: "VALUE",
-//     y: 20,
-//   },
-//   {
-//     name: "VARIANCE",
-//     y: 13,
-//   },
-// ];
+const colorMap = new Map([
+  ["LOW", "#3BE37B"],
+  ["MEDIUM", "#6968E3"],
+  ["HIGH", "#E3C746"],
+  ["CRITICAL", "#E3443B"],
+]);
 
 export class PieChart extends LitElement {
   static properties = {
@@ -60,15 +50,23 @@ export class PieChart extends LitElement {
       result.push({
         name: key,
         y: value,
+        color: this.getColorByType(key),
       });
     }
     console.log(result);
     return result;
   }
 
+  getColorByType(type) {
+    return colorMap.get(type);
+  }
+
   initPieChart() {
     const pieContainer = this.renderRoot.querySelector("#pieContainer");
     this.pieChart = Highcharts.chart(pieContainer, {
+      credits: {
+        enabled: false,
+      },
       chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
@@ -76,7 +74,6 @@ export class PieChart extends LitElement {
         type: "pie",
         colorCount: 4,
       },
-      colors: ["#E3443B", "#E3C746", "#3BE37B", "#6968E3"],
       title: {
         text: "Deviation types",
         align: "left",

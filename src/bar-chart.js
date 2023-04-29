@@ -4,6 +4,22 @@ import "highcharts/modules/no-data-to-display.js";
 import { LitElement, html, css } from "lit";
 import { ObservationDataSvc } from "./dataService";
 
+const colors = ["#E3443B", "#E3C746", "#3BE37B", "#6968E3"];
+
+// const demoTypes = new Map([
+//   ["VARIANCE", "LOW"],
+//   ["VALUE", "MEDIUM"],
+//   ["USER_PERIOD", "HIGH"],
+//   ["HARMONY", "CRITICAL"],
+// ]);
+
+const colorMap = new Map([
+  ["LOW", "#3BE37B"],
+  ["MEDIUM", "#6968E3"],
+  ["HIGH", "#E3C746"],
+  ["CRITICAL", "#E3443B"],
+]);
+
 export class BarChart extends LitElement {
   static properties = {
     dateRange: { type: Array },
@@ -124,6 +140,9 @@ export class BarChart extends LitElement {
 
     let chartData = [];
     if (this.dataset?.length === 0) {
+      while (this.chart.series.length) {
+        this.chart.series[0].remove();
+      }
       this.chart.showLoading("No data");
 
       this.total = 0;
@@ -156,8 +175,15 @@ export class BarChart extends LitElement {
             id: type,
             name: type,
             data: this.dataset.map((obj) => obj.countsByType[type] || 0),
+            color: this.getColorByType(type),
           });
         });
+
+      // this.chart.addSeries({
+      //   type: "pie",
+      //   data: this.dataset.map((obj) => obj.countsByType["CRITICAL"] || 0),
+      //   center: ["10%", "10%"],
+      // });
 
       this.chart.xAxis[0].setCategories(this.dataset.map((i) => i.day));
     }
@@ -169,6 +195,10 @@ export class BarChart extends LitElement {
     // if (this.chart) {
     //   this.chart.update({ series: chartData });
     // }
+  }
+
+  getColorByType(type) {
+    return colorMap.get(type);
   }
 
   initChart() {

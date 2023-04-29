@@ -23,10 +23,10 @@ import {
 } from "date-fns";
 
 const demoTypes = new Map([
-  ["VARIANCE", "TYPE 1"],
-  ["VALUE", "TYPE 2"],
-  ["USER_PERIOD", "TYPE 3"],
-  ["HARMONY", "HELL IS LOOSE!"],
+  ["VARIANCE", "LOW"],
+  ["VALUE", "MEDIUM"],
+  ["USER_PERIOD", "HIGH"],
+  ["HARMONY", "CRITICAL"],
 ]);
 
 export class ObservationDataSvc {

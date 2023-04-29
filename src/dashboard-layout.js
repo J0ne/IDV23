@@ -12,6 +12,7 @@ import {
   endOfQuarter,
   subMonths,
   subQuarters,
+  format,
 } from "date-fns";
 
 export class DashboardLayout extends LitElement {
@@ -19,7 +20,7 @@ export class DashboardLayout extends LitElement {
     .container {
       display: grid;
       grid-template-columns: 1fr 0.9fr 1fr;
-      grid-template-rows: 0.3fr 1fr 1.5fr;
+      grid-template-rows: 0.3fr 0.7fr 1.5fr;
       gap: 10px 10px;
       grid-auto-flow: row;
     }
@@ -66,8 +67,6 @@ export class DashboardLayout extends LitElement {
     }
 
     div[class^="pg-"] {
-      border: 1px solid darkgreen;
-      background-color: whitesmoke;
       padding: 10px;
     }
 
@@ -109,6 +108,22 @@ export class DashboardLayout extends LitElement {
     .date-range-picker {
       grid-area: 2 / 3 / 3 / 4;
     }
+
+    .date-range-labels {
+      margin-top: 6px;
+    }
+
+    .metrics-tile {
+      width: 100%;
+    }
+
+    sl-card.metrics-tile::part(base) {
+      background-color: var(--sl-color-warning-400);
+    }
+
+    .mega-metric {
+      font-size: var(--sl-font-size-4x-large);
+    }
   `;
 
   static properties = {
@@ -142,7 +157,7 @@ export class DashboardLayout extends LitElement {
               @sl-change=${this.handleDateRangeSelect}
               pill
               type="text"
-              placeholder="Select date range"
+              placeholder="Select a custom date range"
             ></sl-input>
               </lit-flatpickr>
           </div>
@@ -156,19 +171,21 @@ export class DashboardLayout extends LitElement {
     this.last14days
   } size="medium" pill>Last 14 days</sl-button>
 </sl-button-group>
-          <!-- <div class="button-group-toolbar">
-            <sl-button-group label="History">
-              <sl-tooltip content="Undo">
-                <sl-button
-                  ><sl-icon name="arrow-counterclockwise" label="Undo"></sl-icon
-                ></sl-button>
-              </sl-tooltip>
-              <sl-tooltip content="Redo">
-                <sl-button
-                  ><sl-icon name="arrow-clockwise" label="Redo"></sl-icon
-                ></sl-button>
-              </sl-tooltip>
-          </div> -->
+<div class="date-range-labels">
+  ${
+    this.dateRange?.length && this.dateRange.length === 2
+      ? html` <label for="dates">From:</label>
+          <sl-tag pill variant="success" name="dates" size="large"
+            >${format(new Date(this.dateRange[0]), "dd.MM.yyyy")}</sl-tag
+          >
+          <label for="dates">to:</label>
+          <sl-tag pill variant="success" name="dates" size="large"
+            >${format(new Date(this.dateRange[1]), "dd.MM.yyyy")}</sl-tag
+          >`
+      : ""
+  }
+
+</div>
         </div>
   <div class="pictograms">
 
@@ -181,17 +198,31 @@ export class DashboardLayout extends LitElement {
   </div>
   <div class="secondary-graph"></div>
    <div class="pg-1">
-<sl-card style="width: 275px; height: 275px; position: relative;">
-  <sl-icon name="graph-up" style="font-size: 36px; position: absolute; top: 10px; right: 10px;"></sl-icon>
-  <div style="font-size: 48px; font-weight: bold; text-align: center;">
-    <span style="font-size: 24px; font-weight: normal;">
-  ${this.total}
-  </span>
-  </div>
-  <div style="font-size: 16px; font-weight: normal; text-align: center;">
-    in total
-  </div>
-</sl-card>
+${
+  this.dateRange?.length && this.dateRange.length === 2
+    ? html`
+        <sl-card class="metrics-tile">
+          <!-- <div slot="header">
+            ${format(new Date(this.dateRange[0]), "dd.MM.yyyy")} -
+            ${format(new Date(this.dateRange[1]), "dd.MM.yyyy")}
+          </div> -->
+
+          <sl-icon
+            name="graph-up"
+            style="font-size: 36px; position: relative; top: 10px; right: 10px;"
+          ></sl-icon>
+          <div style="font-size: 48px; font-weight: bold; text-align: center;">
+            <span class="mega-metric"> ${this.total} </span>
+          </div>
+          <div
+            style="font-size: 16px; font-weight: normal; text-align: center;"
+          >
+            in total
+          </div>
+        </sl-card>
+      `
+    : ""
+}
         </div>
         <div class="pg-2">
         ${
