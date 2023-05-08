@@ -71,6 +71,18 @@ export class BarChart extends LitElement {
     }
   }
 
+  toggleObservationVisibility(observationToShow) {
+    this.chart.series.forEach((series) => {
+      if (observationToShow.length === 0) {
+        series.show();
+      } else if (series.name !== observationToShow.toUpperCase()) {
+        series.hide();
+      } else {
+        series.show();
+      }
+    });
+  }
+
   // showNoData() {
   //   console.log("Todo!");
   //   if (this.chart) {

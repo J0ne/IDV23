@@ -80,8 +80,13 @@ export class DashboardLayout extends LitElement {
       width: 20rem;
     }
 
-    sl-button-group.time-range-buttons {
+    sl-button-group.time-range-buttons,
+    sl-button-group.filter-buttons {
       margin-top: 6px;
+    }
+
+    .time-range-buttons {
+      float: right;
     }
 
     .button-group-toolbar sl-button-group:not(:last-of-type) {
@@ -144,6 +149,8 @@ export class DashboardLayout extends LitElement {
     dateRange: { type: Array },
     devTypeSummary: { type: Object },
     total: { type: Number },
+    filters: { type: Array },
+    activeFilter: { type: String },
   };
 
   constructor() {
@@ -151,6 +158,18 @@ export class DashboardLayout extends LitElement {
 
     this.devTypeSummary = null;
     this.total = 0;
+    this.filters = [];
+    this.activeFilter = "";
+  }
+
+  willUpdate(changedProps) {
+    if (
+      changedProps.has("activeFilter") &&
+      this.activeFilter === "" &&
+      this.#barChart
+    ) {
+      this.#barChart.toggleObservationVisibility(this.activeFilter);
+    }
   }
 
   render() {
@@ -176,15 +195,19 @@ export class DashboardLayout extends LitElement {
               </lit-flatpickr>
           </div>
 
-          <sl-button-group class="time-range-buttons" label="Time ranges">
-  <sl-button @click=${
-    this.lastQuarter
-  } size="medium" pill>Last quarter</sl-button>
+        <sl-button-group class="time-range-buttons" label="Time ranges">
+          <sl-button @click=${
+            this.lastQuarter
+          } size="medium" pill>Last quarter</sl-button>
   <sl-button @click=${this.lastMonth} size="medium" pill>Last month</sl-button>
   <sl-button @click=${
     this.last14days
   } size="medium" pill>Last 14 days</sl-button>
 </sl-button-group>
+${
+  this.filters?.length && this.filters.length > 1 ? this.getFilterButtons() : ""
+}
+
 <div class="date-range-labels">
   ${
     this.dateRange?.length && this.dateRange.length === 2
@@ -242,6 +265,48 @@ export class DashboardLayout extends LitElement {
     return this.dateRange?.length === 2;
   }
 
+  toggleObservationVisibility(e) {
+    const filterType = e.target.id;
+    if (this.activeFilter === filterType) {
+      this.activeFilter = "";
+    } else {
+      this.activeFilter = filterType;
+    }
+
+    this.#barChart.toggleObservationVisibility(this.activeFilter);
+  }
+
+  getFilterButtons() {
+    return html`
+      <sl-button-group
+        class="filter-buttons"
+        @click=${this.toggleObservationVisibility}
+      >
+        ${this.filters.map(
+          (f) =>
+            html` <sl-button
+              ?outline=${this.activeFilter !== f}
+              variant=${this.getVariantByType(f)}
+              pill
+              id=${f}
+              >${f}</sl-button
+            >`
+        )}
+      </sl-button-group>
+    `;
+  }
+
+  getVariantByType(type) {
+    switch (type) {
+      case "CRITICAL":
+        return "danger";
+      case "HIGH":
+        return "warning";
+      default:
+        return "primary";
+    }
+  }
+
   getMegaMetric(value, type, iconName, header) {
     if (!this.shouldShow()) {
       return "";
@@ -271,19 +336,24 @@ export class DashboardLayout extends LitElement {
 
     this.criticalObservations = this.devTypeSummary["CRITICAL"] ?? 0;
     this.highObservations = this.devTypeSummary["HIGH"] ?? 0;
-
-    console.log(this.devTypeSummary);
+    this.filters = Object.keys(dataSummary.types);
   }
 
   firstUpdated() {
     this.#datePicker = this.shadowRoot.querySelector("lit-flatpickr");
+    this.#barChart = this.shadowRoot.querySelector("bar-chart");
   }
 
   #datePicker = null;
+  #barChart = null;
 
   handleDateRangeSelect() {
     const values = this.#datePicker.getSelectedDates();
     if (values.length === 2) {
+      if (values[0].getTime() === values[1].getTime()) {
+        const date = new Date(values[1]).setHours(23, 59);
+        values[1] = new Date(date);
+      }
       this.dateRange = values;
     }
   }
