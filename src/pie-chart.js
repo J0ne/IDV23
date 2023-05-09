@@ -61,6 +61,25 @@ export class PieChart extends LitElement {
     return colorMap.get(type);
   }
 
+  #selectedPoint = null;
+
+  toggleObservationVisibility(observationToShow) {
+    if (observationToShow.length === 0 && this.#selectedPoint) {
+      this.#selectedPoint.select(false, false);
+      this.#selectedPoint.setState({});
+    } else {
+      const point = this.pieChart.series[0].data.filter(
+        (d) => d.name === observationToShow
+      );
+      if (point) {
+        this.#selectedPoint = point[0];
+        this.#selectedPoint.select(true, false);
+        this.#selectedPoint.setState("hover");
+        this.#selectedPoint.onMouseOver();
+      }
+    }
+  }
+
   initPieChart() {
     const pieContainer = this.renderRoot.querySelector("#pieContainer");
     this.pieChart = Highcharts.chart(pieContainer, {
@@ -88,6 +107,12 @@ export class PieChart extends LitElement {
       },
       plotOptions: {
         pie: {
+          states: {
+            hover: {
+              enabled: true,
+              color: "#000",
+            },
+          },
           allowPointSelect: true,
           cursor: "pointer",
           dataLabels: {
@@ -100,10 +125,17 @@ export class PieChart extends LitElement {
         {
           name: "Deviations",
           data: this.data,
+          events: {
+            mouseOver: function () {
+              this.setState("hover");
+            },
+            mouseOut: function () {
+              this.setState("");
+            },
+          },
         },
       ],
     });
   }
 }
-
 customElements.define("pie-chart", PieChart);

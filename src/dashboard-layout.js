@@ -274,6 +274,7 @@ ${
     }
 
     this.#barChart.toggleObservationVisibility(this.activeFilter);
+    this.#pieChart.toggleObservationVisibility(this.activeFilter);
   }
 
   getFilterButtons() {
@@ -342,10 +343,12 @@ ${
   firstUpdated() {
     this.#datePicker = this.shadowRoot.querySelector("lit-flatpickr");
     this.#barChart = this.shadowRoot.querySelector("bar-chart");
+    this.#pieChart = this.shadowRoot.querySelector("pie-chart");
   }
 
   #datePicker = null;
   #barChart = null;
+  #pieChart = null;
 
   handleDateRangeSelect() {
     const values = this.#datePicker.getSelectedDates();
