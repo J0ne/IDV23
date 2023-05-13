@@ -100,11 +100,11 @@ export class DashboardLayout extends LitElement {
   ${
     this.dateRange?.length && this.dateRange.length === 2
       ? html` <label for="dates">From:</label>
-          <sl-tag pill variant="success" name="dates" size="large"
+          <sl-tag name="dates" size="large"
             >${format(new Date(this.dateRange[0]), "dd.MM.yyyy")}</sl-tag
           >
           <label for="dates">to:</label>
-          <sl-tag pill variant="success" name="dates" size="large"
+          <sl-tag name="dates" size="large"
             >${format(new Date(this.dateRange[1]), "dd.MM.yyyy")}</sl-tag
           >`
       : ""
@@ -411,6 +411,7 @@ ${
 
     .date-range-labels {
       margin-top: 6px;
+      padding: 4px;
     }
 
     .date-range {
