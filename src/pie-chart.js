@@ -94,7 +94,7 @@ export class PieChart extends LitElement {
         colorCount: 4,
       },
       title: {
-        text: "Deviation types",
+        text: "Distribution of Types",
         align: "left",
       },
       tooltip: {
@@ -110,7 +110,6 @@ export class PieChart extends LitElement {
           states: {
             hover: {
               enabled: true,
-              color: "#000",
             },
           },
           allowPointSelect: true,
