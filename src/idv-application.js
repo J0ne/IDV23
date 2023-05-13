@@ -1,5 +1,6 @@
 import { LitElement, css, html } from "lit";
 import "@shoelace-style/shoelace/dist/themes/light.css";
+import "@shoelace-style/shoelace/dist/themes/dark.css";
 import "@shoelace-style/shoelace";
 import { setBasePath } from "@shoelace-style/shoelace/dist/utilities/base-path.js";
 import "highcharts";

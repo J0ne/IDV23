@@ -12,17 +12,20 @@ const colorMap = new Map([
 export class PieChart extends LitElement {
   static properties = {
     data: { type: Object },
+    darkMode: { type: Boolean },
   };
 
   constructor() {
     super();
-
     this.pieChart = null;
   }
 
   willUpdate(changedProps) {
     if (changedProps.has("data") && this.pieChart) {
       this.updateChart();
+    }
+    if (changedProps.has("darkMode") && this.pieChart) {
+      this.setToDarkMode(this.darkMode);
     }
   }
 
@@ -53,7 +56,6 @@ export class PieChart extends LitElement {
         color: this.getColorByType(key),
       });
     }
-    console.log(result);
     return result;
   }
 
@@ -78,6 +80,33 @@ export class PieChart extends LitElement {
         this.#selectedPoint.onMouseOver();
       }
     }
+  }
+
+  setToDarkMode(value) {
+    this.pieChart.update({
+      chart: {
+        backgroundColor: value ? "black" : "white",
+      },
+      legend: {
+        itemStyle: {
+          color: value ? "lightgrey" : "black",
+        },
+      },
+      title: {
+        style: {
+          color: value ? "lightgrey" : "black",
+        },
+      },
+      plotOptions: {
+        pie: {
+          dataLabels: {
+            style: {
+              color: value ? "lightgrey" : "black",
+            },
+          },
+        },
+      },
+    });
   }
 
   initPieChart() {
