@@ -22,7 +22,7 @@
     "@ui5/webcomponents": "^1.12.2",
     "date-fns": "^2.29.3",
     "faunadb": "^4.8.0",
-    "highcharts": "10.3.3",
+    "highcharts": "^11.0.1",
     "highcharts-export-data": "0.1.7",
     "highcharts-exporting": "0.1.7",
     "lit": "^2.6.1",

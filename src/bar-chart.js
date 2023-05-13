@@ -27,6 +27,7 @@ export class BarChart extends LitElement {
     dataset: { type: Array },
     loading: { type: Boolean },
     chartType: { type: String },
+    darkMode: { type: Boolean },
   };
 
   constructor() {
@@ -54,6 +55,9 @@ export class BarChart extends LitElement {
   willUpdate(cProps) {
     if (cProps.has("dataset") && this.chart) {
       this.updateChart();
+    }
+    if (cProps.has("darkMode") && this.chart) {
+      this.setToDarkMode(this.darkMode);
     }
     if (cProps.has("dateRange")) {
       if (this.dateRange?.length === 2) {
@@ -83,13 +87,6 @@ export class BarChart extends LitElement {
     });
   }
 
-  // showNoData() {
-  //   console.log("Todo!");
-  //   if (this.chart) {
-  //     // this.chart.showNoData("No data available for this range");
-  //   }
-  // }
-
   render() {
     return html`
       <figure id="barChart"></figure>
@@ -118,7 +115,7 @@ export class BarChart extends LitElement {
             label="Settings"
           ></sl-icon-button>
           <sl-icon-button
-            data-type="line"
+            data-type="spline"
             name="graph-up"
             label="Settings"
           ></sl-icon-button>
@@ -152,6 +149,38 @@ export class BarChart extends LitElement {
       // );
     }
     this.chart.redraw();
+  }
+
+  setToDarkMode(value) {
+    this.chart.update({
+      chart: {
+        backgroundColor: value ? "black" : "white",
+      },
+      legend: {
+        itemStyle: {
+          color: value ? "lightgrey" : "black",
+        },
+      },
+      title: {
+        style: {
+          color: value ? "lightgrey" : "black", // New font color
+        },
+      },
+      xAxis: {
+        labels: {
+          style: {
+            color: value ? "lightgrey" : "black", // New font color
+          },
+        },
+      },
+      yAxis: {
+        labels: {
+          style: {
+            color: value ? "lightgrey" : "black", // New font color
+          },
+        },
+      },
+    });
   }
 
   updateChart() {
@@ -228,6 +257,7 @@ export class BarChart extends LitElement {
       },
       colors: ["#E3443B", "#E3C746", "#3BE37B", "#6968E3"],
       chart: {
+        backgroundColor: this.darkMode ? "#333333" : "#fff",
         type: "column",
         colorCount: 4,
         zooming: {

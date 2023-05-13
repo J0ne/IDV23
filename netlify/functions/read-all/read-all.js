@@ -21,8 +21,6 @@ const client = new Client({
 });
 
 export const handler = async (event) => {
-  console.log("Function `read-all` invoked");
-  debugger;
   try {
     const response = await client.query(
       //query.Paginate(query.Match(query.Index("all_observations")))
@@ -41,7 +39,6 @@ export const handler = async (event) => {
       )
     );
     const itemRefs = response.data;
-    console.log(response);
     // create new query out of item refs. http://bit.ly/2LG3MLg
     // const getAllItemsDataQuery = itemRefs.map((ref) => Get(ref));
     // // then query the refs

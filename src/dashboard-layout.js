@@ -31,6 +31,7 @@ export class DashboardLayout extends LitElement {
     activeFilter: { type: String },
     selectedRange: { type: String },
     loading: { type: Boolean },
+    darkMode: { type: Boolean },
   };
 
   constructor() {
@@ -42,6 +43,7 @@ export class DashboardLayout extends LitElement {
     this.activeFilter = "";
     this.selectedRange = "";
     this.loading = true;
+    this.darkMode = false;
   }
 
   willUpdate(changedProps) {
@@ -57,7 +59,12 @@ export class DashboardLayout extends LitElement {
   render() {
     return html`
       <header>
+        <sl-switch size="small" @sl-change=${this._setViewMode}
+              >
+        ${!this.darkMode ? "Dark" : "Light"}
+      </sl-switch>
       <h3>Observation Dashboard</h3>
+
       <sl-alert class="data-info" closable open>
   <sl-icon slot="icon" name="info-circle"></sl-icon>
  The dataset covers the period from December 2022 to the April 2023.
@@ -77,6 +84,7 @@ export class DashboardLayout extends LitElement {
             minDate="2022-12"
           >
             <sl-input
+             class="${this.darkMode ? "dark" : ""}"
               @sl-change=${this.handleDateRangeSelect}
               pill
               type="text"
@@ -119,8 +127,8 @@ ${
 
   </div>
   <div class="overall-graph">
-          <bar-chart @data-changed=${(e) =>
-            this.handleDataUpdates(e.detail)} .dateRange=${
+          <bar-chart .darkMode=${this.darkMode}  @data-changed=${(e) =>
+      this.handleDataUpdates(e.detail)} .dateRange=${
       this.dateRange
     }></bar-chart>
   </div>
@@ -146,7 +154,9 @@ ${
         </div>
 
   <div class="pie-chart">
-      <pie-chart .data=${this.devTypeSummary}></pie-chart>
+      <pie-chart .darkMode=${this.darkMode} .data=${
+      this.devTypeSummary
+    }></pie-chart>
   </div>
 </div>
     `;
@@ -154,6 +164,15 @@ ${
 
   shouldShow() {
     return this.dateRange?.length === 2;
+  }
+
+  _setViewMode(e) {
+    this.darkMode = e.target.checked;
+    if (this.darkMode) {
+      document.head.parentElement.classList.add("sl-theme-dark");
+    } else {
+      document.head.parentElement.classList.remove("sl-theme-dark");
+    }
   }
 
   toggleObservationVisibility(e) {
@@ -374,6 +393,10 @@ ${
       width: 20rem;
     }
 
+    .dark {
+      background: black;
+    }
+
     sl-button-group.time-range-buttons,
     sl-button-group.filter-buttons {
       margin-top: 6px;
@@ -445,8 +468,9 @@ ${
 
     .data-info::part(base) {
       position: absolute;
-      top: 0px;
-      right: 0px;
+      top: -5px;
+      right: 30%;
+      background-color: white;
     }
 
     sl-skeleton {
@@ -457,10 +481,8 @@ ${
       --border-radius: 0;
     }
 
-    atom-spinner {
-      --atom-spinner__color: #50797d;
-      --atom-spinner__duration: 1s;
-      --atom-spinner__size: 200px;
+    sl-switch {
+      float: right;
     }
   `;
 }
