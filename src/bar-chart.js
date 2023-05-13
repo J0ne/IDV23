@@ -92,7 +92,15 @@ export class BarChart extends LitElement {
 
   render() {
     return html`
+      <figure id="barChart"></figure>
+
       <div class="chart-types">
+        <sl-tooltip
+          content="Try different types of charts"
+          placement="top-start"
+        >
+          <sl-icon name="question-lg" label="Settings"></sl-icon>
+        </sl-tooltip>
         <sl-button-group @click=${this.handleChartTypeChange} label="Alignment">
           <sl-icon-button
             data-type="column"
@@ -106,7 +114,7 @@ export class BarChart extends LitElement {
           ></sl-icon-button>
           <sl-icon-button
             data-type="inverted-bar"
-            name="graph-up"
+            name="list"
             label="Settings"
           ></sl-icon-button>
           <sl-icon-button
@@ -115,7 +123,6 @@ export class BarChart extends LitElement {
             label="Settings"
           ></sl-icon-button>
         </sl-button-group>
-        <figure id="barChart"></figure>
       </div>
     `;
   }
@@ -228,7 +235,7 @@ export class BarChart extends LitElement {
         },
       },
       title: {
-        text: "observation",
+        text: "Trends over Time",
         align: "left",
       },
       // label: false,
@@ -239,9 +246,6 @@ export class BarChart extends LitElement {
       },
       xAxis: {
         type: "datetime",
-      },
-      lang: {
-        noData: "Nichts zu anzsdfsdfsdfeigen",
       },
       noData: {
         style: {
@@ -297,7 +301,6 @@ export class BarChart extends LitElement {
 
   static styles = css`
     .chart-types {
-      background-color: aliceblue;
     }
   `;
 }
